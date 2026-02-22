@@ -1,0 +1,8 @@
+2026-02-21 16:21:45 | INFO    | esg_platform | evidence_upload | tag=boobsiix | file=data.csv | path=C:\esg_rag\evidence_store\boobsiix\e5d6453115af4819a9bcdacc0072c439_data.csv
+2026-02-21 16:21:51 | INFO    | esg_platform | evidence_upload | tag=boobsiix | file=data.csv | path=C:\esg_rag\evidence_store\boobsiix\e936ded6662c4e5a959a05e0a457b48a_data.csv
+2026-02-21 16:22:32 | INFO    | esg_platform | evidence_upload | tag=suckix | file=fuel_invoice_sample.csv | path=C:\esg_rag\evidence_store\suckix\e0bd813e5cb14566b7825ef5b6532c5f_fuel_invoice_sample.csv
+2026-02-21 16:22:55 | INFO    | esg_platform | get_sample_content_from_file | path=C:\esg_rag\evidence_store\suckix\e0bd813e5cb14566b7825ef5b6532c5f_fuel_invoice_sample.csv | rows=1 cols=8 content_len=412
+2026-02-21 16:22:56 | INFO    | esg_platform | generate_calculator_code | tag=suckix metric=calculate co2 | code_len=682
+2026-02-21 16:23:09 | INFO    | esg_platform | retrieval_emission_factor | query=emission factor for Diesel kg CO2e per kg scope 3 | k=3 | num_docs=3
+2026-02-21 16:23:09 | INFO    | esg_platform | retrieval_emission_factor | material=Diesel | result=13.0
+2026-02-21 16:23:09 | INFO    | esg_platform | run_calculator_on_code | df_shape=(1, 9) | result=6500.0
