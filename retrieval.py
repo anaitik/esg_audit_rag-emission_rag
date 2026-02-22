@@ -8,12 +8,12 @@ log = get_logger()
 
 # ---- Safe Imports for LangChain Version Compatibility ----
 
-# BM25 + EnsembleRetriever may live in different packages depending on version
+# Prefer langchain_community (recommended); fall back to langchain or langchain_classic
 try:
-    from langchain.retrievers import BM25Retriever, EnsembleRetriever
+    from langchain_community.retrievers import BM25Retriever, EnsembleRetriever
 except Exception:
     try:
-        from langchain_community.retrievers import BM25Retriever, EnsembleRetriever
+        from langchain.retrievers import BM25Retriever, EnsembleRetriever
     except Exception:
         from langchain_classic.retrievers import BM25Retriever, EnsembleRetriever
 

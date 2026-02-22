@@ -61,7 +61,7 @@ def get_emission_factor_from_chroma(material_name: str, factors_vectorstore, k: 
         return None
 
 
-def make_get_emission_factor(factors_vectorstore, embedding_choice: str = None) -> Callable[[str], Optional[float]]:
+def make_get_emission_factor(factors_vectorstore) -> Callable[[str], Optional[float]]:
     """
     Return a callable get_emission_factor(material_name) that queries Chroma (esg_factors)
     and returns the emission factor for that material, or None if missing.
@@ -116,11 +116,11 @@ def generate_calculator_code(
         ("system", """You are an expert at writing Python code to compute sustainability metrics from structured data.
 Your task is to write a single Python function named `calculate_metric` that:
 - Takes one argument: `df` (a pandas DataFrame). The DataFrame will have the same structure as the sample data provided.
-- Returns a single value (int, float, or str) representing the computed metric.
+- Returns a single value (int, float, or str) representing the computed metric. Prefer numeric results (e.g. sum of emissions) with a clear unit implied by the metric description.
 - You may use a function `get_emission_factor(material_name)` that is provided at runtime. It queries the emission factors database (Chroma) and returns the emission factor (float, kg CO2e per kg or similar) for that material, or None if not found. Use it when you need to multiply material weight by emission factor (e.g. for Scope 3: if the data has material type and weight but no pre-calculated emissions, compute emissions as weight * get_emission_factor(material). If get_emission_factor returns None for a material, skip that row or use 0 and add a comment.
 - Use only pandas, standard library, and get_emission_factor. No other external APIs.
 - Include clear comments explaining the logic.
-- Handles missing values and edge cases where possible.
+- For accuracy: check that required columns exist (e.g. with df.columns or try/except), handle NaN/missing values (e.g. pd.isna, fillna(0)), and use consistent units (e.g. convert to tCO2e if the metric description says so). Do not assume column names beyond what appears in the sample; normalize case or strip whitespace if needed.
 The function must not define get_emission_factor; it is injected when the code runs."""),
         ("human", """Evidence tag: {evidence_tag}
 Metric to compute: {metric_description}
@@ -166,6 +166,19 @@ def load_file_to_dataframe(file_path: str) -> pd.DataFrame:
     if suffix == ".txt":
         text = path.read_text(encoding="utf-8", errors="ignore")
         return pd.DataFrame({"text": [text], "source": [file_path]})
+    if suffix == ".json":
+        # JSON: expect either a list of row dicts or {"rows": [...]} structure
+        import json
+        try:
+            with open(file_path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+        except Exception:
+            return pd.DataFrame()
+        if isinstance(data, dict) and "rows" in data:
+            data = data.get("rows") or []
+        if isinstance(data, list):
+            return pd.DataFrame(data)
+        return pd.DataFrame()
     return pd.DataFrame()
 
 

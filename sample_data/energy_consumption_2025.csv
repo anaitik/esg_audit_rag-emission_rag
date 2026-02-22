@@ -1,0 +1,6 @@
+Site,Energy Type,Consumption (MWh),Renewable %,Period
+HQ,Electricity,1250,100,Jan-Dec 2025
+Site A,Electricity,3200,40,Jan-Dec 2025
+Site B,Electricity,2100,60,Jan-Dec 2025
+Site C,Electricity,1800,25,Jan-Dec 2025
+Total,,8350,56.3,

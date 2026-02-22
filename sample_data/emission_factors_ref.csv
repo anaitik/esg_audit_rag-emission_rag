@@ -1,0 +1,7 @@
+Material / Activity,Unit,Emission Factor (kg CO2e/unit),Source,Scope
+Natural gas,GJ,56,IPCC 2006,Scope 1
+Diesel (stationary),GJ,74,IPCC 2006,Scope 1
+Diesel (mobile),GJ,74,IPCC 2006,Scope 1
+Electricity (grid),MWh,350,National grid factor,Scope 2
+Steel (recycled),kg,0.5,Industry EPD,Scope 3
+Aluminium (primary),kg,11.5,Industry EPD,Scope 3

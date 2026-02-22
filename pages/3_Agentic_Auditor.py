@@ -1,6 +1,12 @@
 """Module C: Agentic Auditor — Select tag, pick sample file, generate code, run on all files when approved."""
 
 import os
+import sys
+from pathlib import Path
+_root = Path(__file__).resolve().parent.parent
+if str(_root) not in sys.path:
+    sys.path.insert(0, str(_root))
+
 import streamlit as st
 
 import config
@@ -17,8 +23,9 @@ from auditor_agent import (
 from evidence_store import get_file_paths_for_tag
 
 st.set_page_config(page_title="Agentic Auditor", layout="wide")
-st.title("Agentic Auditor")
-st.markdown("Select a **tag**, choose a **sample file** from that tag to generate code, then approve and run the code on **all files** of that tag.")
+st.title("3. Agentic Auditor")
+st.caption("Step 3 of 4 — Turn evidence into reported metrics.")
+st.markdown("Select a **tag**, choose a **sample file** to auto-generate a metric calculator, then run it on **all files** for that tag and save the result to the report. Every value is traceable to evidence and code.")
 
 # LLM config in sidebar
 with st.sidebar:
@@ -44,6 +51,18 @@ with st.sidebar:
             os.environ["GROQ_API_KEY"] = api_key
     elif provider_config["provider"] == "ollama":
         st.text_input("Ollama URL", value="http://localhost:11434", key="ollama_url")
+    st.divider()
+    st.caption("Reporting period (for saving to report)")
+    entities = db.list_reporting_entities()
+    entity_options = ["— None"] + [f"{e['entity_name']} ({e['reporting_year']})" for e in entities]
+    if len(entities) > 0:
+        sel = st.selectbox("Link saved metric to period", options=entity_options, key="auditor_entity")
+        if sel != "— None":
+            st.session_state["_auditor_entity_id"] = entities[entity_options.index(sel) - 1]["id"]
+        else:
+            st.session_state["_auditor_entity_id"] = None
+    else:
+        st.session_state["_auditor_entity_id"] = None
     st.divider()
     st.caption("Emission factors (Scope 3)")
     use_factors_db = st.checkbox(
@@ -97,8 +116,47 @@ sample_file_display = st.selectbox(
 )
 sample_file_path = path_by_option.get(sample_file_display) if sample_file_display else None
 
+# Optional AI suggestion for metric description from sample file structure
+metric_prefill = st.session_state.pop("metric_description_suggestion", None)
+if sample_file_path and not metric_prefill:
+    if st.button("Suggest metric description from file structure"):
+        try:
+            from suggestions import suggest_metric_description_llm
+            from auditor_agent import get_sample_content_from_file
+            import ast
+            sample_content = get_sample_content_from_file(sample_file_path)
+            col_list = []
+            if sample_content:
+                for line in sample_content.split("\n"):
+                    if line.strip().startswith("Columns:"):
+                        rest = line.split("Columns:", 1)[-1].strip()
+                        try:
+                            col_list = ast.literal_eval(rest)
+                        except Exception:
+                            pass
+                        break
+                if not isinstance(col_list, list):
+                    col_list = []
+                suggestion = suggest_metric_description_llm(
+                    selected_tag,
+                    col_list,
+                    sample_content,
+                    get_llm,
+                    provider_config,
+                )
+                if suggestion:
+                    st.session_state.metric_description_suggestion = suggestion
+                    st.rerun()
+                else:
+                    st.info("Could not generate suggestion. Enter a description manually.")
+            else:
+                st.info("No content in sample file to suggest from.")
+        except Exception as e:
+            st.warning(f"Suggestion unavailable: {e}. Enter a description manually.")
+
 metric_description = st.text_input(
     "Metric description (for the Reasoning Agent)",
+    value=metric_prefill or "",
     placeholder="e.g. Total Scope 1 GHG emissions in tCO2e; or Total electricity consumption in kWh",
     key="metric_desc",
 )
@@ -190,6 +248,7 @@ if code_to_run:
                         unit="",
                         calculator_module_id=mid,
                         evidence_file_ids=evidence_ids,
+                        reporting_entity_id=st.session_state.get("_auditor_entity_id") or None,
                     )
                     st.success(f"Aggregated result saved: **{aggregated}** (run over {len(per_file)} file(s)).")
                 else:

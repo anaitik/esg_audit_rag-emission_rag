@@ -6,3 +6,88 @@
 2026-02-21 16:23:09 | INFO    | esg_platform | retrieval_emission_factor | query=emission factor for Diesel kg CO2e per kg scope 3 | k=3 | num_docs=3
 2026-02-21 16:23:09 | INFO    | esg_platform | retrieval_emission_factor | material=Diesel | result=13.0
 2026-02-21 16:23:09 | INFO    | esg_platform | run_calculator_on_code | df_shape=(1, 9) | result=6500.0
+2026-02-22 16:58:41 | INFO    | esg_platform | load_document_from_file | file=uba_liste_ef_fuer_thg_bilanzierung_v2.0 (1) (1).xlsx doc_count=1552 extra_metadata={}
+2026-02-22 16:58:41 | INFO    | esg_platform | split_documents | input_docs=1552 output_chunks=1558
+2026-02-22 16:59:38 | INFO    | esg_platform | create_vector_store | collection=esg_factors docs=1558 rebuilt=True
+2026-02-22 16:59:38 | INFO    | esg_platform | ingestion | processed_files=['uba_liste_ef_fuer_thg_bilanzierung_v2.0 (1) (1).xlsx'] new_count=1 total_chunks=1558 rebuilt=True
+2026-02-22 17:01:48 | INFO    | esg_platform | load_document_from_file | file=uba_liste_ef_fuer_thg_bilanzierung_v2.0 (1) (1).xlsx doc_count=1552 extra_metadata={}
+2026-02-22 17:01:48 | INFO    | esg_platform | split_documents | input_docs=1552 output_chunks=1558
+2026-02-22 17:01:53 | INFO    | esg_platform | create_vector_store | collection=esg_factors rebuilt=False (loaded existing)
+2026-02-22 17:01:53 | INFO    | esg_platform | ingestion | processed_files=['uba_liste_ef_fuer_thg_bilanzierung_v2.0 (1) (1).xlsx'] new_count=1 total_chunks=1558 rebuilt=False
+2026-02-22 17:01:54 | INFO    | esg_platform | create_hybrid_retriever | k=4 weights=[0.5, 0.5]
+2026-02-22 17:11:41 | INFO    | esg_platform | retrieval_qa | query=what is the emission factor of diesel | answer_len=952 | num_sources=8 | source_files=['uba_liste_ef_fuer_thg_bilanzierung_v2.0 (1) (1).xlsx']
+2026-02-22 17:12:17 | INFO    | esg_platform | create_framework | name=CSRD | id=1
+2026-02-22 17:12:48 | INFO    | esg_platform | create_iro | framework_id=1 topic=Pollution sub_topic=Energy Consumption scope=Both | id=1
+2026-02-22 17:13:06 | INFO    | esg_platform | evidence_upload | tag=Fuel | file=fuel_data.xlsx | path=C:\Users\anura\Desktop\esg_audit_rag-emission_rag\evidence_store\Fuel\bda8456a2d044c5888ae2fb002b4a8ee_fuel_data.xlsx
+2026-02-22 17:13:41 | INFO    | esg_platform | get_sample_content_from_file | path=C:\Users\anura\Desktop\esg_audit_rag-emission_rag\evidence_store\Fuel\bda8456a2d044c5888ae2fb002b4a8ee_fuel_data.xlsx | rows=2 cols=3 content_len=173
+2026-02-22 17:13:43 | INFO    | esg_platform | generate_calculator_code | tag=Fuel metric=Metric for Fuel | code_len=2019
+2026-02-22 17:14:02 | INFO    | esg_platform | retrieval_emission_factor | query=emission factor for Diesel kg CO2e per kg scope 3 | k=3 | num_docs=3
+2026-02-22 17:14:02 | INFO    | esg_platform | retrieval_emission_factor | material=Diesel | result=13.0
+2026-02-22 17:14:02 | INFO    | esg_platform | retrieval_emission_factor | query=emission factor for Diesel kg CO2e per kg scope 3 | k=3 | num_docs=3
+2026-02-22 17:14:02 | INFO    | esg_platform | retrieval_emission_factor | material=Diesel | result=13.0
+2026-02-22 17:14:02 | INFO    | esg_platform | run_calculator_on_code | df_shape=(2, 3) | result=10497.5
+2026-02-22 17:15:46 | INFO    | esg_platform | load_document_from_file | file=uba_liste_ef_fuer_thg_bilanzierung_v2.0 (1) (1).xlsx doc_count=1552 extra_metadata={}
+2026-02-22 17:15:56 | INFO    | esg_platform | load_document_from_file | file=uba_liste_ef_fuer_thg_bilanzierung_v2.0 (1) (1).xlsx doc_count=1552 extra_metadata={}
+2026-02-22 17:15:59 | INFO    | esg_platform | load_document_from_file | file=uba_liste_ef_fuer_thg_bilanzierung_v2.0 (1) (1).xlsx doc_count=1552 extra_metadata={}
+2026-02-22 17:15:59 | INFO    | esg_platform | split_documents | input_docs=1552 output_chunks=1558
+2026-02-22 17:16:04 | INFO    | esg_platform | create_vector_store | collection=esg_factors rebuilt=False (loaded existing)
+2026-02-22 17:16:04 | INFO    | esg_platform | ingestion | processed_files=['uba_liste_ef_fuer_thg_bilanzierung_v2.0 (1) (1).xlsx'] new_count=1 total_chunks=1558 rebuilt=False
+2026-02-22 17:16:04 | INFO    | esg_platform | create_hybrid_retriever | k=4 weights=[0.5, 0.5]
+2026-02-22 17:16:38 | INFO    | esg_platform | retrieval_qa | query=emission factor for Diesel kg CO2e per kg scope 3 | answer_len=635 | num_sources=8 | source_files=['uba_liste_ef_fuer_thg_bilanzierung_v2.0 (1) (1).xlsx']
+2026-02-22 17:16:48 | INFO    | esg_platform | retrieval_qa | query=emission factor for Diesel kg CO2e per kg scope 3 | answer_len=335 | num_sources=4 | source_files=['uba_liste_ef_fuer_thg_bilanzierung_v2.0 (1) (1).xlsx']
+2026-02-22 17:16:50 | INFO    | esg_platform | retrieval_qa | query=emission factor for Diesel kg CO2e per kg scope 3 | answer_len=327 | num_sources=9 | source_files=['uba_liste_ef_fuer_thg_bilanzierung_v2.0 (1) (1).xlsx']
+2026-02-22 17:17:09 | INFO    | esg_platform | retrieval_qa | query=emission factor for Biodiesel kg CO2e per kg scope 3 | answer_len=804 | num_sources=9 | source_files=['uba_liste_ef_fuer_thg_bilanzierung_v2.0 (1) (1).xlsx']
+2026-02-22 17:17:23 | INFO    | esg_platform | retrieval_qa | query=emission factor for diesel kg CO2e per kg scope 3 | answer_len=371 | num_sources=9 | source_files=['uba_liste_ef_fuer_thg_bilanzierung_v2.0 (1) (1).xlsx']
+2026-02-22 17:17:29 | INFO    | esg_platform | create_hybrid_retriever | k=9 weights=[0.5, 0.5]
+2026-02-22 17:17:30 | INFO    | esg_platform | retrieval_qa | query=emission factor for diesel kg CO2e per kg scope 3 | answer_len=470 | num_sources=18 | source_files=['uba_liste_ef_fuer_thg_bilanzierung_v2.0 (1) (1).xlsx']
+2026-02-22 17:31:00 | INFO    | esg_platform | load_document_from_file | file=uba_liste_ef_fuer_thg_bilanzierung_v2.0 (1) (1).xlsx doc_count=1552 extra_metadata={}
+2026-02-22 17:31:00 | INFO    | esg_platform | split_documents | input_docs=1552 output_chunks=1558
+2026-02-22 17:31:06 | INFO    | esg_platform | create_vector_store | collection=esg_factors rebuilt=False (loaded existing)
+2026-02-22 17:31:06 | INFO    | esg_platform | ingestion | processed_files=['uba_liste_ef_fuer_thg_bilanzierung_v2.0 (1) (1).xlsx'] new_count=1 total_chunks=1558 rebuilt=False
+2026-02-22 17:31:06 | INFO    | esg_platform | create_hybrid_retriever | k=4 weights=[0.5, 0.5]
+2026-02-22 17:31:34 | INFO    | esg_platform | retrieval_qa | query=Summarize Scope 1 and Scope 2 emissions from the documents. | answer_len=368 | num_sources=8 | source_files=['uba_liste_ef_fuer_thg_bilanzierung_v2.0 (1) (1).xlsx']
+2026-02-22 17:35:51 | INFO    | esg_platform | create_iro | framework_id=1 topic=Energy sub_topic=Energy Consumption scope=Both | id=2
+2026-02-22 17:36:20 | INFO    | esg_platform | evidence_upload | tag=energy | file=fuel_data.xlsx | path=C:\Users\anura\Desktop\esg_audit_rag-emission_rag\evidence_store\energy\60607060b16b4a859732595311f13e2b_fuel_data.xlsx
+2026-02-22 17:36:26 | INFO    | esg_platform | evidence_upload | tag=energy | file=fuel_data.xlsx | path=C:\Users\anura\Desktop\esg_audit_rag-emission_rag\evidence_store\energy\862a686f9b0043149897927a2c56f7c6_fuel_data.xlsx
+2026-02-22 17:37:10 | INFO    | esg_platform | get_sample_content_from_file | path=C:\Users\anura\Desktop\esg_audit_rag-emission_rag\evidence_store\Fuel\bda8456a2d044c5888ae2fb002b4a8ee_fuel_data.xlsx | rows=2 cols=3 content_len=173
+2026-02-22 17:37:26 | INFO    | esg_platform | get_sample_content_from_file | path=C:\Users\anura\Desktop\esg_audit_rag-emission_rag\evidence_store\Fuel\bda8456a2d044c5888ae2fb002b4a8ee_fuel_data.xlsx | rows=2 cols=3 content_len=173
+2026-02-22 17:37:27 | INFO    | esg_platform | generate_calculator_code | tag=Fuel metric=Metric for Fuel | code_len=870
+2026-02-22 17:37:38 | INFO    | esg_platform | retrieval_emission_factor | query=emission factor for Diesel kg CO2e per kg scope 3 | k=3 | num_docs=3
+2026-02-22 17:37:38 | INFO    | esg_platform | retrieval_emission_factor | material=Diesel | result=13.0
+2026-02-22 17:37:38 | INFO    | esg_platform | retrieval_emission_factor | query=emission factor for Diesel kg CO2e per kg scope 3 | k=3 | num_docs=3
+2026-02-22 17:37:38 | INFO    | esg_platform | retrieval_emission_factor | material=Diesel | result=13.0
+2026-02-22 17:37:38 | INFO    | esg_platform | run_calculator_on_code | df_shape=(2, 4) | result=12350.0
+2026-02-22 17:37:43 | INFO    | esg_platform | save_calculator_module | tag=Fuel | module_id=1
+2026-02-22 18:09:53 | INFO    | esg_platform | evidence_upload | tag=energy | file=fuel_data2.xlsx | path=C:\Users\anura\Desktop\esg_audit_rag-emission_rag\evidence_store\energy\43346b5f6da14ba4a55659423026834e_fuel_data2.xlsx
+2026-02-22 18:10:42 | INFO    | esg_platform | get_sample_content_from_file | path=C:\Users\anura\Desktop\esg_audit_rag-emission_rag\evidence_store\energy\43346b5f6da14ba4a55659423026834e_fuel_data2.xlsx | rows=2 cols=3 content_len=173
+2026-02-22 18:11:13 | INFO    | esg_platform | get_sample_content_from_file | path=C:\Users\anura\Desktop\esg_audit_rag-emission_rag\evidence_store\energy\43346b5f6da14ba4a55659423026834e_fuel_data2.xlsx | rows=2 cols=3 content_len=173
+2026-02-22 18:11:14 | INFO    | esg_platform | generate_calculator_code | tag=energy metric=fuel consumption | code_len=481
+2026-02-22 18:11:29 | INFO    | esg_platform | run_calculator_on_code | df_shape=(2, 3) | result=950
+2026-02-22 18:11:34 | INFO    | esg_platform | save_calculator_module | tag=energy | module_id=2
+2026-02-22 18:39:52 | INFO    | esg_platform | retrieval_emission_factor | query=emission factor for Diesel kg CO2e per kg scope 3 | k=3 | num_docs=3
+2026-02-22 18:39:52 | INFO    | esg_platform | retrieval_emission_factor | material=Diesel | result=13.0
+2026-02-22 18:39:52 | INFO    | esg_platform | retrieval_emission_factor | query=emission factor for Diesel kg CO2e per kg scope 3 | k=3 | num_docs=3
+2026-02-22 18:39:52 | INFO    | esg_platform | retrieval_emission_factor | material=Diesel | result=13.0
+2026-02-22 18:39:52 | INFO    | esg_platform | run_calculator_on_code | df_shape=(2, 4) | result=12350.0
+2026-02-22 18:40:14 | INFO    | esg_platform | retrieval_emission_factor | query=emission factor for Diesel kg CO2e per kg scope 3 | k=3 | num_docs=3
+2026-02-22 18:40:14 | INFO    | esg_platform | retrieval_emission_factor | material=Diesel | result=13.0
+2026-02-22 18:40:14 | INFO    | esg_platform | retrieval_emission_factor | query=emission factor for Diesel kg CO2e per kg scope 3 | k=3 | num_docs=3
+2026-02-22 18:40:14 | INFO    | esg_platform | retrieval_emission_factor | material=Diesel | result=13.0
+2026-02-22 18:40:14 | INFO    | esg_platform | run_calculator_on_code | df_shape=(2, 4) | result=12350.0
+2026-02-22 18:40:14 | INFO    | esg_platform | run_calculator_on_tag | tag=Fuel | file_count=1 | aggregated=12350.0 | per_file=[('C:\\Users\\anura\\Desktop\\esg_audit_rag-emission_rag\\evidence_store\\Fuel\\bda8456a2d044c5888ae2fb002b4a8ee_fuel_data.xlsx', 12350.0)]
+2026-02-22 18:40:14 | INFO    | esg_platform | save_report_value | tag=Fuel | metric=Fuel | value=12350.0 | report_id=1
+2026-02-22 18:40:48 | INFO    | esg_platform | save_calculator_module | tag=Fuel | module_id=1
+2026-02-22 22:46:14 | INFO    | esg_platform | create_reporting_entity | name=GreenTech Industries year=2025 | id=1
+2026-02-22 22:46:14 | INFO    | esg_platform | create_iro | framework_id=1 topic=Climate Change sub_topic=Scope 1 emissions scope=Both | id=3
+2026-02-22 22:46:14 | INFO    | esg_platform | create_iro | framework_id=1 topic=Energy sub_topic=Energy consumption scope=Both | id=4
+2026-02-22 22:46:14 | INFO    | esg_platform | create_iro | framework_id=1 topic=Water sub_topic=Water withdrawal scope=Impact | id=5
+2026-02-22 22:46:14 | INFO    | esg_platform | save_calculator_module | tag=CSRD_2025_ClimateChange_Scope1 | module_id=4
+2026-02-22 22:46:14 | INFO    | esg_platform | save_report_value | tag=CSRD_2025_ClimateChange_Scope1 | metric=Total Scope 1 GHG emissions (tCO2e) | value=149.58 | report_id=2
+2026-02-22 23:32:31 | INFO    | esg_platform | get_sample_content_from_file | path=C:\Users\anura\Desktop\esg_audit_rag-emission_rag\evidence_store\energy\9393d5a661c0414abf4673284836045c_fuel_data2.json | rows=2 cols=3 content_len=173
+2026-02-23 00:52:42 | INFO    | esg_platform | create_framework | name=CSRD | id=1
+2026-02-23 00:52:42 | INFO    | esg_platform | create_reporting_entity | name=GreenTech Industries year=2025 | id=1
+2026-02-23 00:52:42 | INFO    | esg_platform | create_iro | framework_id=1 topic=Climate Change sub_topic=Scope 1 emissions scope=Both | id=1
+2026-02-23 00:52:42 | INFO    | esg_platform | create_iro | framework_id=1 topic=Energy sub_topic=Energy consumption scope=Both | id=2
+2026-02-23 00:52:42 | INFO    | esg_platform | create_iro | framework_id=1 topic=Water sub_topic=Water withdrawal scope=Impact | id=3
+2026-02-23 00:52:42 | INFO    | esg_platform | save_calculator_module | tag=CSRD_2025_ClimateChange_Scope1 | module_id=1
+2026-02-23 00:52:42 | INFO    | esg_platform | save_report_value | tag=CSRD_2025_ClimateChange_Scope1 | metric=Total Scope 1 GHG emissions (tCO2e) | value=149.58 | report_id=1

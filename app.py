@@ -73,28 +73,87 @@ def process_uploaded_files(uploaded_files, embedding_choice):
     st.success(f"Index updated with {len(new_files)} new file(s). Total chunks: {len(split_all)}")
 
 def main():
-    st.set_page_config(page_title="ESG Reporting Platform", layout="wide")
-    st.title("🌱 ESG Reporting Platform")
-    st.markdown("**Materiality & Scope** → **Evidence Vault** → **Agentic Auditor** → **Report & Audit**")
+    st.set_page_config(page_title="ESG Audit Platform", layout="wide", initial_sidebar_state="expanded")
 
-    # Dashboard: link to the three core modules
+    # ----- Hero: ESG Audit & Assurance Platform -----
+    st.markdown(
+        """
+        <div style="text-align: center; padding: 1rem 0 1.5rem 0;">
+            <h1 style="margin: 0; font-size: 2rem;">ESG Audit & Assurance Platform</h1>
+            <p style="color: #666; margin: 0.5rem 0 0 0; font-size: 1.05rem;">
+                Double materiality · Evidence-backed metrics · Audit-ready trail
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    # ----- Audit readiness from DB -----
+    try:
+        import db as _db
+        stats = _db.get_audit_readiness_stats()
+    except Exception:
+        stats = {
+            "framework_count": 0, "entity_count": 0, "iro_count": 0,
+            "evidence_count": 0, "report_value_count": 0,
+            "readiness_pct": 0, "steps_completed": 0, "steps_total": 5,
+        }
+
+    st.markdown("### Audit readiness")
+    r1, r2, r3 = st.columns([2, 1, 2])
+    with r1:
+        pct = stats["readiness_pct"]
+        st.progress(pct / 100.0)
+        st.caption(f"**{pct}%** — {stats['steps_completed']} of {stats['steps_total']} steps: Framework → Entity → Material topics → Evidence → Reported metrics")
+    with r2:
+        st.metric("Reported metrics", stats["report_value_count"])
+    with r3:
+        st.metric("Evidence files", stats["evidence_count"])
+
+    if stats["readiness_pct"] < 100:
+        next_steps = []
+        if stats["framework_count"] == 0:
+            next_steps.append("**Materiality & Scope** → Add a reporting framework (e.g. CSRD, GRI).")
+        if stats["entity_count"] == 0 and stats["framework_count"] > 0:
+            next_steps.append("**Materiality & Scope** → Create a reporting entity and period.")
+        if stats["iro_count"] == 0 and stats["entity_count"] > 0:
+            next_steps.append("**Materiality & Scope** → Add material topics (IROs) and map to disclosures.")
+        if stats["evidence_count"] == 0 and stats["iro_count"] > 0:
+            next_steps.append("**Evidence Vault** → Upload source documents and link to material topics.")
+        if stats["report_value_count"] == 0 and stats["evidence_count"] > 0:
+            next_steps.append("**Agentic Auditor** → Generate a calculator, run on evidence, and save to report.")
+        if next_steps:
+            with st.expander("What to do next"):
+                for s in next_steps:
+                    st.markdown(s)
+
+    # ----- Four-step workflow (clear for presentations) -----
+    st.markdown("### Workflow")
+    st.markdown(
+        "Complete each step to build an audit-ready report. Every metric is traceable to **source evidence** and **calculation logic**."
+    )
     col1, col2, col3, col4 = st.columns(4)
     with col1:
-        st.page_link("pages/1_Materiality_Scope.py", label="📋 Materiality & Scope", icon="📋")
-        st.caption("Define framework & Double Materiality Assessment (IROs)")
+        st.page_link("pages/1_Materiality_Scope.py", label="1. Materiality & Scope", icon="📋")
+        st.caption("Set reporting entity, period & framework. Run double materiality (IROs) and map to ESRS/GRI.")
     with col2:
-        st.page_link("pages/2_Evidence_Vault.py", label="📁 Evidence Vault", icon="📁")
-        st.caption("Upload documents with tags; grouped for audit")
+        st.page_link("pages/2_Evidence_Vault.py", label="2. Evidence Vault", icon="📁")
+        st.caption("Upload source documents and link them to material topics for traceability.")
     with col3:
-        st.page_link("pages/3_Agentic_Auditor.py", label="🤖 Agentic Auditor", icon="🤖")
-        st.caption("Auto-generate metric calculators from evidence")
+        st.page_link("pages/3_Agentic_Auditor.py", label="3. Agentic Auditor", icon="🤖")
+        st.caption("Generate metric calculators from a sample file; run on all evidence and save to report.")
     with col4:
-        st.page_link("pages/4_Report_Audit.py", label="📊 Report & Audit", icon="📊")
-        st.caption("Audit trail: value → evidence → code")
+        st.page_link("pages/4_Report_Audit.py", label="4. Report & Audit", icon="📊")
+        st.caption("View disclosure coverage, metrics, evidence, and code — ready for assurance.")
+
+    st.markdown(
+        "_Advanced (beta): Use the **Standardised Data Lake** page to normalise messy files to JSON, "
+        "tag them, and then run the Agentic Auditor over those JSON datasets._"
+    )
 
     st.divider()
-    st.subheader("Document Q&A (RAG)")
-    st.markdown("Upload emission factor databases, ESG reports, or any documents. Ask questions and get answers with sources.")
+    st.markdown("### Document Q&A (evidence lookup)")
+    st.markdown("Index emission factor databases, ESG reports, or policies. Ask questions and get answers **with cited sources** (file, page/sheet).")
 
     # Sidebar configuration
     with st.sidebar:
@@ -179,22 +238,43 @@ def main():
             st.session_state.last_k = k_documents
             st.session_state.last_hybrid = use_hybrid
 
-        query = st.text_input("Ask a question about your ESG factors:")
+        # Suggested questions so users know what to ask
+        from suggestions import DEFAULT_QA_SUGGESTIONS
+        if DEFAULT_QA_SUGGESTIONS:
+            st.caption("Suggested questions (click to use):")
+            cols = st.columns(min(len(DEFAULT_QA_SUGGESTIONS), 3))
+            for i, q in enumerate(DEFAULT_QA_SUGGESTIONS):
+                with cols[i % len(cols)]:
+                    if st.button(q[:55] + ("..." if len(q) > 55 else ""), key=f"qa_sugg_{i}"):
+                        st.session_state.qa_query_prefill = q
+                        st.rerun()
+
+        query = st.text_input(
+            "Ask a question about your ESG factors:",
+            value=st.session_state.get("qa_query_prefill", ""),
+            key="qa_query_input",
+        )
+        if st.session_state.get("qa_query_prefill"):
+            st.session_state.qa_query_prefill = None
         if query:
             with st.spinner("Searching and generating answer..."):
                 llm = get_llm(provider_config, temperature=0.0, streaming=True)
 
-                # Custom prompt to encourage source citation
-                template = """Use the following pieces of context to answer the question at the end. 
-                If you don't know the answer, just say that you don't know, don't try to make up an answer.
-                Always cite the source file and relevant metadata (like sheet name or page number) from the context.
+                # Custom prompt for accuracy and source citation
+                template = """You are an ESG and emissions reporting expert. Use ONLY the context below to answer the question.
 
-                Context:
-                {context}
+Rules:
+- If the answer is not clearly supported by the context, say "I don't know" or "The provided documents do not contain this information." Do not guess or infer beyond the context.
+- Always cite the exact source: file name, and when available sheet name, page number, or row from the context.
+- For numbers (e.g. emission factors, totals), quote the value and its unit from the context.
+- Keep the answer concise but complete; include all relevant figures and their sources.
 
-                Question: {question}
+Context:
+{context}
 
-                Answer (with sources):"""
+Question: {question}
+
+Answer (with exact sources):"""
                 QA_CHAIN_PROMPT = PromptTemplate.from_template(template)
 
                 qa_chain = RetrievalQA.from_chain_type(
