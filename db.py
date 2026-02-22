@@ -322,6 +322,31 @@ def get_evidence_tags_for_iro(iro_id: int) -> List[str]:
     return [r["evidence_tag"] for r in rows]
 
 
+def get_iros_for_evidence_tag(evidence_tag: str) -> List[dict]:
+    """Return IROs linked to any evidence file with this tag (for materiality context in Agentic Auditor)."""
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute(
+        """SELECT i.id, i.framework_id, i.topic, i.sub_topic, i.materiality_scope, i.stakeholder_groups, i.description, i.disclosure_code
+           FROM iros i
+           INNER JOIN evidence_files e ON e.iro_id = i.id
+           WHERE e.evidence_tag = ?
+           ORDER BY i.topic, i.sub_topic""",
+        (evidence_tag,),
+    )
+    rows = cur.fetchall()
+    conn.close()
+    return [dict(r) for r in rows]
+
+
+def get_framework_id_for_entity(entity_id: Optional[int]) -> Optional[int]:
+    """Return framework_id for the given reporting entity, or None."""
+    if not entity_id:
+        return None
+    entity = get_reporting_entity(entity_id)
+    return entity["framework_id"] if entity else None
+
+
 # ---- Calculator modules ----
 
 def save_calculator_module(evidence_tag: str, code_text: str, metric_description: str = "") -> int:

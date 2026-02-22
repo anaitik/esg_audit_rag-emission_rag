@@ -91,3 +91,14 @@
 2026-02-23 00:52:42 | INFO    | esg_platform | create_iro | framework_id=1 topic=Water sub_topic=Water withdrawal scope=Impact | id=3
 2026-02-23 00:52:42 | INFO    | esg_platform | save_calculator_module | tag=CSRD_2025_ClimateChange_Scope1 | module_id=1
 2026-02-23 00:52:42 | INFO    | esg_platform | save_report_value | tag=CSRD_2025_ClimateChange_Scope1 | metric=Total Scope 1 GHG emissions (tCO2e) | value=149.58 | report_id=1
+2026-02-23 00:54:35 | INFO    | esg_platform | load_document_from_file | file=emission_factors_ref.csv doc_count=6 extra_metadata={}
+2026-02-23 00:54:35 | INFO    | esg_platform | split_documents | input_docs=6 output_chunks=6
+2026-02-23 00:54:40 | INFO    | esg_platform | create_vector_store | collection=esg_factors docs=6 rebuilt=True
+2026-02-23 00:54:40 | INFO    | esg_platform | ingestion | processed_files=['emission_factors_ref.csv'] new_count=1 total_chunks=6 rebuilt=True
+2026-02-23 00:54:40 | INFO    | esg_platform | create_hybrid_retriever | k=4 weights=[0.5, 0.5]
+2026-02-23 00:55:54 | INFO    | esg_platform | retrieval_qa | query=What emission factors are available for common materials? | answer_len=611 | num_sources=5 | source_files=['emission_factors_ref.csv']
+2026-02-23 00:58:32 | INFO    | esg_platform | get_sample_content_from_file | path=C:\Users\anura\Desktop\esg_audit_rag-emission_rag\evidence_store\EnergyTest\cf64edd46cda42b6bac801ce5604bc5f_energy_consumption_2025.json | rows=5 cols=5 content_len=493
+2026-02-23 00:58:34 | INFO    | esg_platform | generate_calculator_code | tag=EnergyTest metric=Emissions and ESG metrics | code_len=1140
+2026-02-23 00:59:44 | INFO    | esg_platform | run_calculator_on_code | df_shape=(5, 7) | result=4515.7089
+2026-02-23 00:59:55 | INFO    | esg_platform | run_calculator_on_code | df_shape=(5, 7) | result=4515.7089
+2026-02-23 01:00:00 | INFO    | esg_platform | save_calculator_module | tag=EnergyTest | module_id=2

@@ -19,13 +19,18 @@ from auditor_agent import (
     make_get_emission_factor,
     run_calculator_on_file,
     run_calculator_on_tag,
+    run_auditor_agent,
 )
 from evidence_store import get_file_paths_for_tag
 
 st.set_page_config(page_title="Agentic Auditor", layout="wide")
 st.title("3. Agentic Auditor")
 st.caption("Step 3 of 4 — Turn evidence into reported metrics.")
-st.markdown("Select a **tag**, choose a **sample file** to auto-generate a metric calculator, then run it on **all files** for that tag and save the result to the report. Every value is traceable to evidence and code.")
+st.markdown(
+    "Select a **tag**, choose a **sample file**. The auditor agent will: understand **double materiality** (IROs), "
+    "use the sample to **prepare emission factor queries**, **retrieve** factors from the vector store, then **generate** "
+    "the calculator code. Run on all files for that tag and save to the report. Every value is traceable to evidence and code."
+)
 
 # LLM config in sidebar
 with st.sidebar:
@@ -161,27 +166,37 @@ metric_description = st.text_input(
     key="metric_desc",
 )
 
-# Auto-Generate Calculator from the selected sample file
-if st.button("Auto-Generate Calculator"):
+# Agentic flow: materiality → sample → query plan → retrieval → code gen
+framework_id = db.get_framework_id_for_entity(st.session_state.get("_auditor_entity_id"))
+
+# Auto-Generate Calculator (agentic pipeline)
+if st.button("Auto-Generate Calculator (Agentic)"):
     if not sample_file_path:
         st.error("Select a sample file first.")
         st.stop()
-    with st.spinner("Loading sample file..."):
-        sample_content = get_sample_content_from_file(sample_file_path)
-    if not sample_content:
-        st.warning("Could not read sample file content.")
-        st.stop()
-    with st.spinner("Generating Python calculator from sample..."):
-        llm = get_llm(provider_config, temperature=0.2, streaming=False)
-        code_text = generate_calculator_code(
-            sample_content,
-            selected_tag,
-            metric_description or f"Metric for {selected_tag}",
-            llm,
+    llm = get_llm(provider_config, temperature=0.2, streaming=False)
+    with st.spinner("Running auditor agent: materiality → sample → query plan → retrieval → code gen..."):
+        code_text, steps_log = run_auditor_agent(
+            evidence_tag=selected_tag,
+            sample_file_path=sample_file_path,
+            metric_description=metric_description or f"Metric for {selected_tag}",
+            llm=llm,
+            framework_id=framework_id,
+            factors_vectorstore=factors_vectorstore,
         )
     st.session_state["generated_code"] = code_text
     st.session_state["generated_tag"] = selected_tag
+    st.session_state["auditor_steps_log"] = steps_log
     st.rerun()
+
+# Show agent steps log when we have a fresh generation
+if "auditor_steps_log" in st.session_state and st.session_state.get("generated_tag") == selected_tag:
+    with st.expander("Agent steps (materiality → sample → query plan → retrieval → code)", expanded=True):
+        for s in st.session_state["auditor_steps_log"]:
+            st.markdown(f"**{s['step'].replace('_', ' ').title()}** — {s['summary']}")
+            if s.get("detail"):
+                st.text(s["detail"][:1200] + ("..." if len(s.get("detail", "")) > 1200 else ""))
+            st.divider()
 
 # Show generated or saved code and allow edit
 code_to_run = None
@@ -263,6 +278,8 @@ if code_to_run:
             if "generated_code" in st.session_state:
                 del st.session_state["generated_code"]
                 del st.session_state["generated_tag"]
+            if "auditor_steps_log" in st.session_state:
+                del st.session_state["auditor_steps_log"]
             st.rerun()
 
 # List saved calculators
